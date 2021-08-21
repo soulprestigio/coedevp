@@ -8,13 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class modelSample extends Model
 {
     use HasFactory;
-    
     protected $primaryKey = 'name';
     protected $fillable = [
         'name', 
-        'area', 
+        'area',
         'status'
-    ];    
+    ];
 }
 
 

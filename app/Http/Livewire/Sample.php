@@ -1,25 +1,25 @@
 <?php
 
 namespace App\Http\Livewire;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\modelSample;
-use Auth;
-
+use Illuminate\Support\Str;
+use App\Models\rejected;
+use App\Models\reserved;
+use DB;
 
 class sample extends Component
 {
-    public $sample,$name,$area,$status,$authname;
-    protected $sample2;
+    public $sample,$idtable,$name,$area,$status,$authname,$searchTerm,$approved,$rejected;
     public $isModalOpen = 0;
 
      /* text */
-     
+    
     public function render() 
     {
-    $this->authname = Auth::user()->name;
     $this->sample = modelSample::all();
-    $this->sample2 = modelSample::where('name',$this->authname);
-        return view('livewire.sample',['sample2' => 'name']);
+    return view('livewire.sample');
     }
     
     /* text */
@@ -39,8 +39,7 @@ class sample extends Component
     {
         $this->isModalOpen = false;
     }
-
-  
+    
     private function resetCreateForm()
     {
         $this->name = '';
@@ -58,37 +57,36 @@ class sample extends Component
         modelSample::updateOrCreate(['name' => $this->name], [
             'name' => $this->name,
             'area' => $this->area,
-            'status'=> $this->status
+            'status'=> "pending"
         ]);
-
+        
         session()->flash('message', $this->status ? 'reservation updated.' : 'reservation created.');
 
         $this->closeModalPopover();
         $this->resetCreateForm();
     }
-
-    public function edit($name)
+          
+    public function approve()
     {
-        $sample = modelSample::findOrFail($name);
-        $this->name = $name;
-        $this->status = $sample->status;   
-        $this->openModalPopover();
+        reserved::updateOrCreate(['name' => $this->name], [
+        'id' =>mt_rand(000001, 9999999),
+        'name' => $this->name,
+        'area' => $this->area,
+        'status' =>"approved"
+        ]);
+                       
+        session()->flash('message', 'reservation approved');
     }
     
-    public function delete($name)
+    public function rejected ()
     {
-        sample::find($name)->delete();
-        session()->flash('message', 'record deleted.');
-    }
-    
-    public function approve($name)
-    {
-        $this->sample = modelSample::all();
-        sample::find($name)->delete();
-        session()->flash('message', 'record approved');
-    }
-    
-  
+       rejected::updateOrCreate(['name' => $this->name], [
+       'id' =>"RJ"+increment('id')->first(),
+       'name' => $this->name,
+       'area' => $this->area,
+        ]);
+          
+      sample::find($name)->delete();
+      session()->flash('message', 'reservation rejected');
+    }     
 }
-
-

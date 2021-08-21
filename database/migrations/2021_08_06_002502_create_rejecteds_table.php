@@ -4,19 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSamplesTable extends Migration
+class createrejectedmodel extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
+    public function uprejected()
     {
-        Schema::create('samples', function (Blueprint $table) {
+        Schema::create('rejected', function (Blueprint $table) {
+            $table->id();
             $table->string('name', 100);
-            $table->string('area', 100);
-            $table->string('status', 100);
+            $table->string('area');            
+            $table->timestamps();
         });
     }
 
@@ -25,8 +26,8 @@ class CreateSamplesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function downrejected()
     {
-        Schema::dropIfExists('samples');
+        Schema::dropIfExists('rejected');
     }
 }
