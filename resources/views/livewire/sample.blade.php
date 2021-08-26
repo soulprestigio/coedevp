@@ -26,24 +26,24 @@
             </tr>
             </thead>
             <tbody>
-            @if ( Auth::user()->current_team_id  == '2')
-            @foreach($sample as $sample)
+            @if ( Auth::user()->current_team_id  == '1')
+            {{$samples}}
+            @foreach($samples as $sample)  /* front  */
             <tr>
             <td class="border px-4 py-2">{{ $sample->name }}</td>
             <td class="border px-4 py-2">{{ $sample->area }}</td>
             <td class="border px-4 py-2">{{ $sample->status }}</td>
             <td class="border px-4 py-2">
-            <button wire:click="approve({{ $sample->status }})"
+            <button wire:click="approve('{{$sample->name}}','{{$sample->area}}')"
                                 class="bg-blue-500  text-white font-bold py-2 px-4 rounded">Approve</button>
-                            <button wire:click="delete({{ $sample->name }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Reject</button>
+                        <button wire:click="rejected({{ $sample->name }})"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Reject</button>
                         </td>
                     </tr>
         
                     </td>
                     </tr>
             @endforeach
-            @else
-            @foreach($sample)
             
             @endif
             

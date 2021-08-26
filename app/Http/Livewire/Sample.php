@@ -11,14 +11,14 @@ use DB;
 
 class sample extends Component
 {
-    public $sample,$idtable,$name,$area,$status,$authname,$searchTerm,$approved,$rejected;
+    public $samples,$idtable,$name,$area,$status,$authname,$searchTerm,$approved,$rejected;
     public $isModalOpen = 0;
 
      /* text */
     
     public function render() 
     {
-    $this->sample = modelSample::all();
+    $this->samples = modelSample::get();
     return view('livewire.sample');
     }
     
@@ -57,7 +57,6 @@ class sample extends Component
         modelSample::updateOrCreate(['name' => $this->name], [
             'name' => $this->name,
             'area' => $this->area,
-            'status'=> "pending"
         ]);
         
         session()->flash('message', $this->status ? 'reservation updated.' : 'reservation created.');
@@ -66,14 +65,13 @@ class sample extends Component
         $this->resetCreateForm();
     }
           
-    public function approve()
-    {
-        reserved::updateOrCreate(['name' => $this->name], [
-        'id' =>mt_rand(000001, 9999999),
-        'name' => $this->name,
-        'area' => $this->area,
+    public function approve($name,$area)
+    {    
+        reserved::updateOrCreate(['name' => $name], [
+        'name' => $name,
+        'area' => $area,
         'status' =>"approved"
-        ]);
+        ]); 
                        
         session()->flash('message', 'reservation approved');
     }
@@ -81,9 +79,10 @@ class sample extends Component
     public function rejected ()
     {
        rejected::updateOrCreate(['name' => $this->name], [
-       'id' =>"RJ"+increment('id')->first(),
+       'id' => mt_rand(000001, 9999999),
        'name' => $this->name,
        'area' => $this->area,
+       'status'=>"rejected"
         ]);
           
       sample::find($name)->delete();

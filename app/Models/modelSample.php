@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class modelSample extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'name';
+    public $timestamps = false;
+    public $table = 'model_samples';
     protected $fillable = [
         'name', 
         'area',
